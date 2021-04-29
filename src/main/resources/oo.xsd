@@ -1,0 +1,1365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified">
+
+    <!-- Configuration Items -->
+    <xs:element name="domainTerm" type="domainTermType" />
+    <xs:element name="scriptlet" type="scriptletType" />
+    <xs:element name="selectionList" type="selectionListType" />
+    <xs:element name="identity" type="systemAccountType" />
+    <xs:element name="groupAlias" type="groupAliasType" />
+	<xs:element name="roleAlias" type="roleType" />
+    <xs:element name="category" type="categoryType" />
+    <xs:element name="systemProperty" type="systemPropertyType" />
+
+    <!-- Configuration Items - System Evaluators -->
+    <xs:element name="compare" type="compareType" />
+    <xs:element name="containsEvaluator" type="containsEvaluatorType" />
+    <xs:element name="regexEvaluator" type="regexEvaluatorType" />
+    <xs:element name="scriptletEvaluator" type="scriptletEvaluatorType" />
+
+    <!-- Filters -->
+    <xs:element name="baseFilter" type="baseFilterType" abstract="true"/>
+    <xs:element name="regexFilter" type="regexFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="caseFilter" type="caseFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="numberFilter" type="numberFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="concat" type="concatType" substitutionGroup="baseFilter"/>
+    <xs:element name="countLinesFilter" type="countLinesFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="removeDuplicatesFilter" type="removeDuplicatesFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="replaceAllFilter" type="replaceAllFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="roundingFilter" type="roundingFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="scriptletFilter" type="scriptletFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="selectLineFilter" type="selectLineFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="selectRangeFilter" type="selectRangeFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="sortFilter" type="sortFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="stripTrailingFilter" type="stripTrailingFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="stripWhitespaceFilter" type="stripWhitespaceFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="tableFilter" type="tableFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="xmlGetAttributeFilter" type="xmlGetAttributeFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="xmlGetElementsFilter" type="xmlGetElementsFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="xmlGetElementValueFilter" type="xmlGetElementValueFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="xpathFilter" type="xpathFilterType" substitutionGroup="baseFilter"/>
+    <xs:element name="referenceFilter" type="referenceFilterType" substitutionGroup="baseFilter"/>
+
+    <xs:complexType name="scriptletEvaluatorType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="scriptlet" type="scriptletType" />
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+    <xs:complexType name="regexEvaluatorType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="expression" type="xs:string" />
+            <xs:element name="ignoreCase" type="xs:boolean" />
+            <xs:element name="multiLine" type="xs:boolean" />
+            <xs:element name="entireString" type="xs:boolean" />
+            <xs:element name="regType" type="regexFormatType" />
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+    <xs:complexType name="containsEvaluatorType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="text" type="xs:string" />
+            <xs:element name="ignoreCase" type="xs:boolean" />
+            <xs:element name="matchType">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="NOT_EXACT_MATCH" />
+                        <xs:enumeration value="MATCH_ONLY_ONE_WORD" />
+                        <xs:enumeration value="MATCH_NONE_OF_THE_WORDS" />
+                        <xs:enumeration value="MATCH_AT_LEAST_ONE_WORD" />
+                        <xs:enumeration value="MATCH_ALL_WORDS" />
+                        <xs:enumeration value="EXACT_MATCH" />
+                        <xs:enumeration value="ENDS_WITH" />
+                        <xs:enumeration value="CONTAINS" />
+                        <xs:enumeration value="BEGINS_WITH" />
+                        <xs:enumeration value="ALWAYS_MATCH" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+    <xs:complexType name="compareType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="text" type="xs:string" />
+            <xs:element name="matchType">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="&lt;=" />
+                        <xs:enumeration value="&lt;" />
+                        <xs:enumeration value="&gt;=" />
+                        <xs:enumeration value="&gt;" />
+                        <xs:enumeration value="=" />
+                        <xs:enumeration value="!=" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+    <xs:complexType name="domainTermType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="storage" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="domainTermValue" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:all>
+                                    <xs:element name="annotation" type="xs:string" />
+                                    <xs:element name="name" type="xs:string" />
+                                </xs:all>
+                                <xs:attribute name="id" type="restrictionId" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+    <xs:complexType name="selectionListType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="storage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="string" type="xs:string" maxOccurs="unbounded" minOccurs="0" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+    <xs:complexType name="systemAccountType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="token" type="xs:string" />
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+    <xs:complexType name="systemPropertyType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="value" type="xs:string" minOccurs="0" />
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+    <xs:complexType name="groupAliasType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+	<xs:complexType name="roleType">
+		<xs:all>
+			<xs:element name="annotation" type="xs:string" />
+			<xs:element name="name" type="xs:string" />
+		</xs:all>
+		<xs:attribute name="id" type="restrictionId" />
+	</xs:complexType>
+
+    <xs:complexType name="categoryType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" />
+            <xs:element name="name" type="xs:string" />
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" />
+    </xs:complexType>
+
+    <xs:simpleType name="proxyTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NONE"/>
+            <xs:enumeration value="GENERIC_PROXY"/>
+            <xs:enumeration value="OPSWARE_GATEWAY"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="proxyHeadersType">
+        <xs:all>
+            <xs:element name="entry" type="proxyEntryType" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="proxyEntryType">
+        <xs:all>
+            <xs:element name="key" type="xs:string" minOccurs="0"/>
+            <xs:element name="string" type="xs:string" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="proxy">
+        <xs:all>
+            <xs:element name="proxyInformation" minOccurs="0">
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element name="proxyHeaders" type="proxyHeadersType" minOccurs="0"/>
+                        <xs:element name="proxyHost" type="xs:string" minOccurs="0"/>
+                        <xs:element name="proxyPassword" type="xs:string" minOccurs="0"/>
+                        <xs:element name="proxyPort" type="xs:string" minOccurs="0"/>
+                        <xs:element name="proxyType" type="proxyTypeEnum" minOccurs="0"/>
+                        <xs:element name="proxyUser" type="xs:string" minOccurs="0"/>
+                    </xs:all>
+                    <xs:attribute name="id" type="restrictionId" />
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:element name="flow" type="flowType"/>
+    <xs:element name="operation" type="operationType"/>
+    <xs:element name="group" type="groupType"/>
+
+    <xs:simpleType name="restrictionName">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="groupType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="name" type="restrictionName"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="flowType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="categories" type="categoriesType" minOccurs="0"/>
+            <xs:element name="checkPointFlow" type="xs:string"/>
+            <xs:element name="compatibleRuntimeContext" type="xs:string"/>
+            <xs:element name="historyCheckPointFlow" type="xs:string"/>
+            <xs:element name="name" type="restrictionName"/>
+            <xs:element name="availableResultExpressions" type="availableResultExpressionsType" minOccurs="0"/>
+            <xs:element name="inputs" type="bindingsType"/>
+            <xs:element name="possibleResponses" type="possibleResponsesType"/>
+            <xs:element name="resultExpression" type="resultExpressionType" minOccurs="0"/>
+            <xs:element name="scriptlet" type="scriptletType" minOccurs="0"/>
+            <xs:element name="startSteps" type="restrictionId"/>
+            <xs:element name="steps" type="stepsType"/>
+            <xs:element name="callouts" type="calloutsType" minOccurs="0"/>
+            <xs:element name="iconSpec" type="iconSpecType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="expressionType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="fieldName" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="sourceType" type="sourceTypeType"/>
+            <xs:element name="containsEvaluator" type="containsResponseType" minOccurs="0"/>
+            <xs:element name="filters" type="filtersType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="propertiesType" mixed="true">
+        <xs:sequence>
+            <xs:element name="entry" type="entryPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="entryPropertyType">
+        <xs:sequence>
+            <xs:element name="key" type="xs:string"/>
+            <xs:element name="modelValue" type="modelValueType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="transitionsType">
+        <xs:sequence>
+            <xs:element name="transition" type="transitionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="identityBindingType">
+        <xs:all>
+            <xs:element name="identityAttribute" type="identityAttributeType"/>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignFromContext" type="xs:boolean"/>
+            <xs:element name="assignToContext" type="xs:boolean"/>
+            <xs:element name="fromContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="inputSymbol" type="xs:string"/>
+            <xs:element name="inputType" type="inputTypeType"/>
+            <xs:element name="isList" type="xs:boolean"/>
+            <xs:element name="isPersisted" type="xs:boolean"/>
+            <xs:element name="link" type="refIdType" minOccurs="0"/>
+            <xs:element name="listDelimiter" type="xs:string"/>
+            <xs:element name="recordKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="recordName" type="xs:string" minOccurs="0"/>
+            <xs:element name="record" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="required" type="xs:boolean"/>
+            <xs:element name="toContextKey" type="xs:string" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="resultBindingType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignFromContext" type="xs:boolean"/>
+            <xs:element name="assignToContext" type="xs:boolean"/>
+            <xs:element name="fromContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="inputSymbol" type="xs:string"/>
+            <xs:element name="inputType" type="inputTypeType"/>
+            <xs:element name="isList" type="xs:boolean"/>
+            <xs:element name="isPersisted" type="xs:boolean"/>
+            <xs:element name="listDelimiter" type="xs:string"/>
+            <xs:element name="recordKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="recordName" type="xs:string" minOccurs="0"/>
+            <xs:element name="required" type="xs:boolean"/>
+            <xs:element name="record" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="toContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="validationFormat" type="refIdType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="staticBindingType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignFromContext" type="xs:boolean"/>
+            <xs:element name="assignToContext" type="xs:boolean"/>
+            <xs:element name="fromContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="inputSymbol" type="xs:string"/>
+            <xs:element name="inputType" type="inputTypeType"/>
+            <xs:element name="isList" type="xs:boolean"/>
+            <xs:element name="isPersisted" type="xs:boolean"/>
+            <xs:element name="listDelimiter" type="xs:string"/>
+            <xs:element name="required" type="xs:boolean"/>
+            <xs:element name="toContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="value" type="xs:string" minOccurs="0"/>
+            <xs:element name="record" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="recordKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="recordName" type="xs:string" minOccurs="0"/>
+            <xs:element name="validationFormat" type="refIdType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="contextBindingType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignFromContext" type="xs:boolean"/>
+            <xs:element name="assignToContext" type="xs:boolean"/>
+            <xs:element name="contextPath" type="xs:string"/>
+            <xs:element name="fromContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="inputSymbol" type="xs:string"/>
+            <xs:element name="inputType" type="inputTypeType"/>
+            <xs:element name="isList" type="xs:boolean"/>
+            <xs:element name="isPersisted" type="xs:boolean"/>
+            <xs:element name="listDelimiter" type="xs:string"/>
+            <xs:element name="record" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="recordKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="recordName" type="xs:string" minOccurs="0"/>
+            <xs:element name="prompt" type="xs:string" minOccurs="0"/>
+            <xs:element name="required" type="xs:boolean"/>
+            <xs:element name="toContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="link" type="refIdType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="loggedUserIdentityBindingType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignFromContext" type="xs:boolean"/>
+            <xs:element name="assignToContext" type="xs:boolean"/>
+            <xs:element name="fromContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="toContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="inputSymbol" type="xs:string"/>
+            <xs:element name="inputType" type="inputTypeType"/>
+            <xs:element name="isList" type="xs:boolean"/>
+            <xs:element name="isPersisted" type="xs:boolean"/>
+            <xs:element name="listDelimiter" type="xs:string"/>
+            <xs:element name="recordKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="recordName" type="xs:string" minOccurs="0"/>
+            <xs:element name="required" type="xs:boolean"/>
+            <xs:element name="record" type="xs:boolean" minOccurs="0"/>
+	        <xs:element name="identityAttribute" type="identityAttributeType"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="userInputBindingType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignFromContext" type="xs:boolean"/>
+            <xs:element name="assignToContext" type="xs:boolean"/>
+            <xs:element name="dynPickListKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="fromContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="inputSymbol" type="xs:string"/>
+            <xs:element name="inputType" type="inputTypeType"/>
+            <xs:element name="isList" type="xs:boolean"/>
+            <xs:element name="isMultiSelect" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="isPersisted" type="xs:boolean"/>
+            <xs:element name="link" type="refIdType" minOccurs="0"/>
+            <xs:element name="listDelimiter" type="xs:string"/>
+            <xs:element name="sourceDelimiter" type="xs:string" minOccurs="0"/>
+            <xs:element name="prompt" type="xs:string" minOccurs="0"/>
+            <xs:element name="recordKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="recordName" type="xs:string" minOccurs="0"/>
+            <xs:element name="record" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="required" type="xs:boolean"/>
+            <xs:element name="toContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="validationFormat" type="refIdType" minOccurs="0"/>
+            <!--<xs:element type="refIdType" name="link" minOccurs="0"/>-->
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="compareResponseType">
+        <xs:complexContent>
+            <xs:extension base="baseResponseType">
+                <xs:all>
+                    <xs:element name="modifiedTimestamp" type="xs:string" minOccurs="0"  />
+                    <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+                    <xs:element name="matchType" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="text" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="containsResponseType">
+        <xs:complexContent>
+            <xs:extension base="baseResponseType">
+                <xs:all>
+                    <xs:element name="modifiedTimestamp" type="xs:string" minOccurs="0"  />
+                    <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+                    <xs:element name="ignoreCase" type="xs:boolean"/>
+                    <xs:element name="matchType" minOccurs="0">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="ALWAYS_MATCH"/>
+                                <xs:enumeration value="BEGINS_WITH"/>
+                                <xs:enumeration value="CONTAINS"/>
+                                <xs:enumeration value="ENDS_WITH"/>
+                                <xs:enumeration value="EXACT_MATCH"/>
+                                <xs:enumeration value="MATCH_ALL_WORDS"/>
+                                <xs:enumeration value="MATCH_AT_LEAST_ONE_WORD"/>
+                                <xs:enumeration value="MATCH_NONE_OF_THE_WORDS"/>
+                                <xs:enumeration value="MATCH_ONLY_ONE_WORD"/>
+                                <xs:enumeration value="NOT_EXACT_MATCH"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="text" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="referenceResponseType">
+        <xs:complexContent>
+            <xs:extension base="baseResponseType">
+                <xs:all>
+                    <xs:element name="modifiedTimestamp" type="xs:string" minOccurs="0"  />
+                    <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="evaluatorRef" type="refIdType"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="scriptletResponseType">
+        <xs:complexContent>
+            <xs:extension base="baseResponseType">
+                <xs:all>
+                    <xs:element name="modifiedTimestamp" type="xs:string" minOccurs="0"  />
+                    <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="scriptlet" type="scriptletType"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="regexResponseType">
+        <xs:complexContent>
+            <xs:extension base="baseResponseType">
+                <xs:all>
+                    <xs:element name="modifiedTimestamp" type="xs:string" minOccurs="0"  />
+                    <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+                    <xs:element name="entireString" type="xs:boolean"/>
+                    <xs:element name="expression" type="xs:string"/>
+                    <xs:element name="ignoreCase" type="xs:boolean"/>
+                    <xs:element name="multiLine" type="xs:boolean"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="regType" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="flowVariableAssignmentType">
+        <xs:all>
+            <xs:element name="action" type="xs:string"/>
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="assignmentTargetType" type="xs:string"/>
+            <xs:element name="contextKey" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="expression" type="expressionType"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="scriptletType">
+        <xs:all minOccurs="0">
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="script" type="xs:string" minOccurs="0"/>
+            <xs:element name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="RHINO" />
+                        <xs:enumeration value="SLEEP" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="scriptRef" type="refIdType" minOccurs="0" />
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+    <xs:complexType name="transitionType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="command" type="xs:string"/>
+            <xs:element name="linkMode" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="responseSymbol" type="xs:string"/>
+            <xs:element name="shouldHandoff" type="xs:string"/>
+            <xs:element name="transitionValue" type="xs:string"/>
+	        <xs:element name="requiredRoleAlias" type="refIdType" minOccurs="0"/>
+            <xs:element name="destination" type="destinationType"/>
+            <xs:element name="source" type="destinationType"/>
+            <xs:element name="viewAttributes" type="xs:string"  minOccurs="0"/>
+            <xs:element name="labelPosition" type="positionType" minOccurs="0" />
+            <xs:element name="positions" type="pointListType" minOccurs="0" />
+		</xs:all>
+        <xs:attribute name="id" type="restrictionId" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="calloutsType">
+        <xs:sequence>
+            <xs:element name="callout" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element name="text" type="xs:string"/>
+                        <xs:element name="viewAttributes" type="xs:string"  minOccurs="0"/>
+                        <xs:element name="step" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="refId" type="xs:string"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="bounds" type="boundsType" minOccurs="0"/>
+                        <xs:element name="layer" type="xs:int" minOccurs="0" />
+                    </xs:all>
+                    <xs:attribute name="id" type="restrictionId" use="required"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="parallelLaneType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="viewAttributes" type="xs:string" minOccurs="0"/>
+            <xs:element name="bounds" type="boundsType" minOccurs="0"/>
+            <xs:element name="parallelStartStep" type="refIdType"/>
+            <xs:element name="parallelSteps">
+                <xs:complexType mixed="true">
+                    <xs:sequence>
+                        <xs:element name="refId" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+		</xs:all>
+        <xs:attribute name="id" type="restrictionId" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="refIdType">
+        <xs:sequence>
+            <xs:element name="refId" type="xs:string"/>
+            <xs:element name="refName" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="stepsType">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="step" type="regularStepType"/>
+            <xs:element name="returnStep" type="returnStepType"/>
+            <xs:element name="parallelMultiStep" type="parallelMultiStepType"/>
+            <xs:element name="multiInstanceStep" type="multiInstanceStepType"/>
+            <xs:element name="endBranchStep" type="endBranchStepType"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="lanesType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="parallelLane" type="parallelLaneType"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="possibleResponsesType">
+        <xs:sequence>
+            <xs:element name="opResponse" type="opResponseType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="modelValueType">
+        <xs:all>
+            <xs:element name="doubleValue" type="xs:string"/>
+            <xs:element name="encrypted" type="xs:string"/>
+            <xs:element name="stringValue" type="xs:string" minOccurs="0"/>
+            <xs:element name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int">
+                        <xs:enumeration value="9"/>
+                        <xs:enumeration value="5"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="destinationType">
+        <xs:sequence>
+            <xs:element name="refId" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="entryType">
+        <xs:sequence>
+            <xs:element name="key" type="xs:string"/>
+            <xs:choice>
+                <xs:element name="string" type="xs:string"/>
+                <xs:element name="boolean" type="xs:boolean"/>
+                <xs:element name="int" type="xs:int"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="resultExpressionTypeSet">
+        <xs:sequence>
+            <xs:element name="expression" type="resultExpressionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+
+
+
+    <xs:complexType name="resultExpressionType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="fieldName" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="sourceType" type="sourceTypeType"/>
+            <!--<xs:choice minOccurs="0">-->
+            <xs:element name="containsEvaluator" type="containsResponseType" minOccurs="0"/>
+            <xs:element name="compare" type="compareResponseType" minOccurs="0"/>
+            <xs:element name="referenceEvaluator" type="referenceResponseType" minOccurs="0"/>
+            <xs:element name="regexEvaluator" type="regexResponseType" minOccurs="0"/>
+            <xs:element name="scriptletEvaluator" type="scriptletResponseType" minOccurs="0"/>
+            <!--</xs:choice>-->
+            <xs:element name="filters" type="filtersType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+    <xs:complexType name="availableResultExpressionsType">
+        <xs:sequence>
+            <xs:element name="expression" type="expressionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="assignmentsType">
+        <xs:sequence>
+            <xs:element name="flowVariableAssignment" type="flowVariableAssignmentType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="endBranchStepType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="addResultToRunContext" type="xs:boolean"/>
+            <xs:element name="isCriticalStep" type="xs:boolean"/>
+            <xs:element name="isNonBlocking" type="xs:boolean"/>
+            <xs:element name="isParallelStep" type="xs:boolean"/>
+            <xs:element name="isSingleResponse" type="xs:boolean"/>
+            <xs:element name="recordInHistory" type="xs:boolean"/>
+            <xs:element name="recordRawOutput" type="xs:boolean"/>
+            <xs:element name="recordPrimaryOutput" type="xs:boolean"/>
+            <xs:element name="checkPointStep" type="xs:boolean"/>
+            <xs:element name="historyCheckPointStep" type="xs:boolean"/>
+            <xs:element name="scriptResultStep" type="xs:boolean"/>
+            <xs:element name="bindings" type="bindingsType" minOccurs="0"/>
+            <xs:element name="properties" type="propertiesType" minOccurs="0" />
+            <xs:element name="transitions" type="transitionsType"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="steps" type="stepsType" minOccurs="0"/>
+            <xs:element name="userPrompt" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignments" minOccurs="0" maxOccurs="0">
+                <xs:complexType mixed="true">
+                    <xs:sequence>
+                        <xs:element name="flowVariableAssignment" type="flowVariableAssignmentType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="bounds" type="boundsType" minOccurs="0"/>
+            <xs:element name="layer" type="xs:int" minOccurs="0"/>
+            <xs:element name="viewAttributes" type="xs:string"  minOccurs="0"/>
+            <xs:element name="hideInbound" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="iconSpec" type="iconSpecType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="multiInstanceStepType">
+        <xs:all>
+            <xs:element name="addResultToRunContext" type="xs:boolean"/>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="isCriticalStep" type="xs:boolean"/>
+            <xs:element name="isNonBlocking" type="xs:boolean"/>
+            <xs:element name="isParallelStep" type="xs:boolean"/>
+            <xs:element name="isSingleResponse" type="xs:boolean"/>
+            <xs:element name="recordInHistory" type="xs:boolean"/>
+            <xs:element name="recordRawOutput" type="xs:boolean"/>
+            <xs:element name="recordPrimaryOutput" type="xs:boolean"/>
+            <xs:element name="checkPointStep" type="xs:boolean"/>
+            <xs:element name="historyCheckPointStep" type="xs:boolean"/>
+            <xs:element name="scriptResultStep" type="xs:boolean"/>
+            <xs:element name="bindings" type="bindingsType"/>
+            <xs:element name="properties" type="propertiesType"/>
+            <xs:element name="scriptlet" type="scriptletType" minOccurs="0"/>
+            <xs:element name="transitions" type="transitionsType"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element ref="doneResponse"/>
+            <xs:element name="startSteps">
+                <xs:complexType mixed="true">
+                    <xs:sequence>
+                        <xs:element name="refId" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="steps" type="stepsType"/>
+            <xs:element name="assignments" minOccurs="0">
+                <xs:complexType mixed="true">
+                    <xs:sequence>
+                        <xs:element name="flowVariableAssignment" type="flowVariableAssignmentType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="throttleSize" type="xs:int" minOccurs="0"/>
+            <xs:element name="userPrompt" type="xs:string" minOccurs="0"/>
+            <xs:element name="lanes" type="lanesType"/>
+            <xs:element name="bounds" type="boundsType" minOccurs="0"/>
+            <xs:element name="layer" type="xs:int" minOccurs="0"/>
+            <xs:element name="viewAttributes" type="xs:string"  minOccurs="0"/>
+            <xs:element name="callouts" type="calloutsType" minOccurs="0"/>
+            <xs:element name="hideInbound" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="iconSpec" type="iconSpecType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="parallelMultiStepType">
+        <xs:all>
+            <xs:element name="addResultToRunContext" type="xs:boolean"/>
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="isCriticalStep" type="xs:boolean"/>
+            <xs:element name="isNonBlocking" type="xs:boolean"/>
+            <xs:element name="isParallelStep" type="xs:boolean"/>
+            <xs:element name="isSingleResponse" type="xs:boolean"/>
+            <xs:element name="recordInHistory" type="xs:boolean"  minOccurs="0"/>
+            <xs:element name="recordRawOutput" type="xs:boolean"  minOccurs="0"/>
+            <xs:element name="recordPrimaryOutput" type="xs:boolean"  minOccurs="0"/>
+            <xs:element name="checkPointStep" type="xs:boolean"  minOccurs="0"/>
+            <xs:element name="historyCheckPointStep" type="xs:boolean"  minOccurs="0"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="scriptResultStep" type="xs:boolean"/>
+            <xs:element name="userPrompt" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignments" minOccurs="0">
+                <xs:complexType mixed="true">
+                    <xs:sequence>
+                        <xs:element name="flowVariableAssignment" type="flowVariableAssignmentType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="bindings" type="bindingsType"/>
+            <xs:element ref="doneResponse"/>
+            <xs:element name="startSteps">
+                <xs:complexType mixed="true">
+                    <xs:sequence>
+                        <xs:element name="refId" type="xs:string" minOccurs="2" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="lanes" type="lanesType"/>
+            <xs:element name="steps" type="stepsType"/>
+            <xs:element name="properties" type="propertiesType"/>
+            <xs:element name="scriptlet" type="scriptletType" minOccurs="0"/>
+            <xs:element name="transitions" type="transitionsType"/>
+            <xs:element name="bounds" type="boundsType" minOccurs="0"/>
+            <xs:element name="layer" type="xs:int" minOccurs="0"/>
+            <xs:element name="viewAttributes" type="xs:string"  minOccurs="0"/>
+            <xs:element name="callouts" type="calloutsType" minOccurs="0"/>
+            <xs:element name="hideInbound" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="iconSpec" type="iconSpecType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" use="optional"/>
+    </xs:complexType>
+    <xs:element name="doneResponse" type="doneResponseType"/>
+    <xs:complexType name="doneResponseType">
+        <xs:sequence>
+            <xs:element name="refId" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="regularStepType">
+        <xs:all>
+            <xs:element name="addResultToRunContext" type="xs:boolean"/>
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="isCriticalStep" type="xs:boolean"/>
+            <xs:element name="isNonBlocking" type="xs:boolean"/>
+            <xs:element name="isParallelStep" type="xs:boolean"/>
+            <xs:element name="isSingleResponse" type="xs:boolean"/>
+            <xs:element name="recordInHistory" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="recordRawOutput" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="recordPrimaryOutput" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="checkPointStep" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="historyCheckPointStep" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="opRef" type="refIdType"/>
+            <xs:element name="resultContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="scriptResultStep" type="xs:boolean"/>
+            <xs:element name="throttleSize" type="xs:int" minOccurs="0"/>
+            <xs:element name="userPrompt" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignments" minOccurs="0">
+                <xs:complexType mixed="true">
+                    <xs:sequence>
+                        <xs:element name="flowVariableAssignment" type="flowVariableAssignmentType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="bindings" type="bindingsType"/>
+            <xs:element name="properties" type="propertiesType" minOccurs="0"/>
+            <xs:element name="scriptlet" type="scriptletType" minOccurs="0"/>
+            <xs:element name="transitions" type="transitionsType"/>
+            <xs:element name="bounds" type="boundsType" minOccurs="0"/>
+            <xs:element name="layer" type="xs:int" minOccurs="0"/>
+            <xs:element name="viewAttributes" type="xs:string"  minOccurs="0"/>
+            <xs:element name="hideInbound" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="iconSpec" type="iconSpecType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="returnStepType">
+        <xs:all>
+            <xs:element name="returnStepType" type="returnOpType"/>
+            <xs:element name="addResultToRunContext" type="xs:boolean"/>
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="isCriticalStep" type="xs:boolean"/>
+            <xs:element name="isNonBlocking" type="xs:boolean"/>
+            <xs:element name="isParallelStep" type="xs:boolean"/>
+            <xs:element name="isSingleResponse" type="xs:boolean"/>
+            <xs:element name="recordInHistory" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="recordRawOutput" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="recordPrimaryOutput" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="checkPointStep" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="historyCheckPointStep" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="resultContextKey" type="xs:string" minOccurs="0"/>
+            <xs:element name="scriptResultStep" type="xs:boolean"/>
+            <xs:element name="throttleSize" type="xs:int" minOccurs="0"/>
+            <xs:element name="userPrompt" type="xs:string" minOccurs="0"/>
+            <xs:element name="assignments" minOccurs="0">
+                <xs:complexType mixed="true">
+                    <xs:sequence>
+                        <xs:element name="flowVariableAssignment" type="flowVariableAssignmentType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="bindings" type="bindingsType"/>
+            <xs:element name="properties" type="propertiesType" minOccurs="0"/>
+            <xs:element name="scriptlet" type="scriptletType" minOccurs="0"/>
+            <xs:element name="transitions" type="transitionsType"/>
+            <xs:element name="bounds" type="boundsType" minOccurs="0"/>
+            <xs:element name="layer" type="xs:int" minOccurs="0"/>
+            <xs:element name="viewAttributes" type="xs:string"  minOccurs="0"/>
+            <xs:element name="hideInbound" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="iconSpec" type="iconSpecType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+
+    <xs:complexType name="bindingsType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:choice>
+                <xs:element name="staticBinding" type="staticBindingType"/>
+                <xs:element name="identityBinding" type="identityBindingType"/>
+                <xs:element name="resultBinding" type="resultBindingType"/>
+                <xs:element name="loggedUserIdentityBinding" type="loggedUserIdentityBindingType"/>
+                <xs:element name="userInputBinding" type="userInputBindingType"/>
+                <xs:element name="contextBinding" type="contextBindingType"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="opResponseType">
+        <xs:all>
+            <xs:element name="annotation" type="xs:string"/>
+            <xs:element name="isDefault" type="xs:boolean"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="onFailure" type="xs:boolean"/>
+            <xs:element name="type" type="returnOpType" minOccurs="0"/>
+            <xs:element name="matchRules" type="resultExpressionTypeSet" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="regexFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="entireString" type="xs:string"/>
+                    <xs:element name="expression" type="xs:string"/>
+                    <xs:element name="ignoreCase" type="xs:string"/>
+                    <xs:element name="multiLine" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="regType" type="regexFormatType"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="caseFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="toUpper" type="xs:boolean"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="numberFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="replaceAllFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="ignoreCase" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="replaceString" type="xs:string" minOccurs="0"/>
+                    <xs:element name="replaceType" type="xs:string"/>
+                    <xs:element name="searchString" type="xs:string" minOccurs="0"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="concatType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="position" type="xs:string"/>
+                    <xs:element name="text" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="countLinesFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="removeDuplicatesFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="consecutive" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="roundingFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="ceiling" type="xs:string"/>
+                    <xs:element name="floor" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="numPlaces" type="xs:string"/>
+                    <xs:element name="round" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="scriptletFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="scriptlet" type="scriptletType"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="selectLineFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="autoSelectLineEnding" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="text" type="xs:string"/>
+                    <xs:element name="type" type="xs:string"/>
+                    <xs:element name="unixLineEnding" type="xs:string"/>
+                    <xs:element name="windowsLineEnding" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="selectRangeFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="length" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="start" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="sortFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="ascending" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="treatAsNumbers" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="stripTrailingFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="strip" type="xs:string"/>
+                    <xs:element name="type" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="stripWhitespaceFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="tableFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="ascending" type="xs:string"/>
+                    <xs:element name="columnDelimiter" type="xs:string" minOccurs="0"/>
+                    <xs:element name="firstRowHeader" type="xs:string"/>
+                    <xs:element name="lineDelimintor" type="xs:string" minOccurs="0"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="selectCol" type="xs:string"/>
+                    <xs:element name="selectHeight" type="xs:string"/>
+                    <xs:element name="selectRow" type="xs:string"/>
+                    <xs:element name="selectWidth" type="xs:string"/>
+                    <xs:element name="sortColumn" type="xs:string"/>
+                    <xs:element name="stripFirstRow" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="xmlGetAttributeFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="attributeName" type="xs:string" minOccurs="0"/>
+                    <xs:element name="elementPath" type="xs:string" minOccurs="0"/>
+                    <xs:element name="includeSubElements" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="resultAsFirstResult" type="xs:string"/>
+                    <xs:element name="resultAsTable" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="xmlGetElementsFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="attributeNamed" type="xs:string" minOccurs="0"/>
+                    <xs:element name="attributeValue" type="xs:string" minOccurs="0"/>
+                    <xs:element name="childNamed" type="xs:string" minOccurs="0"/>
+                    <xs:element name="childValue" type="xs:string" minOccurs="0"/>
+                    <xs:element name="elementPath" type="xs:string" minOccurs="0"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="xmlGetElementValueFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="elementPath" type="xs:string" minOccurs="0"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="xpathFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="xpathQuery" type="xs:string" minOccurs="0"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="referenceFilterType">
+        <xs:complexContent>
+            <xs:extension base="baseFilterType">
+                <xs:all>
+                    <xs:element name="annotation" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="filterRef" type="refIdType" minOccurs="0"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="operationType">
+        <xs:all maxOccurs="1">
+            <xs:element name="annotation" type="xs:string" minOccurs="0"/>
+            <xs:element name="categories" type="categoriesType" minOccurs="0"/>
+            <xs:element name="plugin" type="actionPluginType" minOccurs="0"/>
+            <xs:element name="fieldValues" type="fieldValuesType" minOccurs="0"/>
+            <xs:element name="overrideGroupAlias" type="xs:string" minOccurs="0"/>
+            <xs:element name="name" type="restrictionName"/>
+            <xs:element name="availableResultExpressions" type="availableResultExpressionsType" minOccurs="0"/>
+            <xs:element name="inputs" type="bindingsType" minOccurs="0"/>
+            <xs:element name="possibleResponses" type="possibleResponsesType" minOccurs="0"/>
+            <xs:element name="resultExpression" type="resultExpressionType" minOccurs="0"/>
+            <xs:element name="scriptlet" type="scriptletType" minOccurs="0"/>
+            <xs:element name="groupAliasRef" type="refIdType" minOccurs="0"/>
+            <xs:element name="opRef" type="refIdType" minOccurs="0"/>
+            <xs:element name="iconSpec" type="iconSpecType" minOccurs="0"/>
+        </xs:all>
+        <xs:attribute name="id" type="restrictionId"/>
+    </xs:complexType>
+    <xs:complexType name="fieldValuesType">
+        <xs:sequence>
+            <xs:element name="entry" type="entryType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="actionPluginType">
+        <xs:sequence>
+            <xs:element name="groupId" type="xs:string"/>
+            <xs:element name="artifactId" type="xs:string"/>
+            <xs:element name="version" type="xs:string"/>
+            <xs:element name="actionName" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="categoriesType">
+        <xs:sequence>
+            <xs:element name="category" type="refIdType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="responseType">
+        <xs:sequence>
+            <xs:element ref="baseResponse" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="baseResponseType">
+        <xs:attribute name="id" type="xs:string"/>
+    </xs:complexType>
+    <xs:element name="baseResponse" type="baseResponseType" abstract="true"/>
+
+    <xs:simpleType name="returnOpType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="RESOLVED"/>
+            <xs:enumeration value="ERROR"/>
+            <xs:enumeration value="DIAGNOSED"/>
+            <xs:enumeration value="NO_ACTION_TAKEN"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="regexFormatType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="PERL5" />
+            <xs:enumeration value="JAVA" />
+            <xs:enumeration value="AWK" />
+            <xs:enumeration value="GLOB" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="inputTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="STRING"/>
+            <xs:enumeration value="ENCRYPTED"/>
+            <xs:enumeration value="BOOLEAN"/>
+            <xs:enumeration value="OBJECT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="sourceTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="RAWRESULT"/>
+            <xs:enumeration value="AVAILABLE_RESULT"/>
+            <xs:enumeration value="INPUT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="identityAttributeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="USERNAME"/>
+            <xs:enumeration value="PASSWORD"/>
+            <xs:enumeration value="OTHER"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="filtersType">
+        <xs:sequence>
+            <xs:element ref="baseFilter" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="baseFilterType">
+        <xs:attribute name="id" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="restrictionId">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[\w]{8}-[\w]{4}-[\w]{4}-[\w]{4}-[\w]{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="positionType">
+           <xs:all>
+               <xs:element name="x" type="xs:double" />
+               <xs:element name="y" type="xs:double" />
+           </xs:all>
+       </xs:complexType>
+
+       <xs:complexType name="boundsType">
+           <xs:all>
+               <xs:element name="x" type="xs:double" minOccurs="0" />
+               <xs:element name="y" type="xs:double" minOccurs="0"/>
+               <xs:element name="width" type="xs:double" minOccurs="0"/>
+               <xs:element name="height" type="xs:double" minOccurs="0" />
+           </xs:all>
+       </xs:complexType>
+
+       <xs:complexType name="pointListType">
+           <xs:sequence>
+               <xs:element name="point" type="pointType" minOccurs="0" maxOccurs="unbounded"/>
+           </xs:sequence>
+       </xs:complexType>
+
+       <xs:complexType name="pointType">
+           <xs:all>
+               <xs:element name="x" type="xs:double" />
+               <xs:element name="y" type="xs:double" />
+           </xs:all>
+       </xs:complexType>
+
+       <xs:complexType name="iconListType">
+           <xs:sequence>
+               <xs:element name="iconSpec" type="iconSpecType" minOccurs="0" maxOccurs="unbounded"/>
+           </xs:sequence>
+       </xs:complexType>
+
+       <xs:complexType name="iconSpecType">
+           <xs:all>
+               <xs:element name="baseIcon" type="xs:string" />
+               <xs:element name="basePath" type="xs:string" />
+               <xs:element name="readOnly" type="xs:boolean" />
+               <xs:element name="layers" type="iconListType"  />
+           </xs:all>
+           <xs:attribute name="id" type="restrictionId" />
+       </xs:complexType>
+
+    <xs:complexType name="revisionsType">
+        <xs:sequence>
+            <xs:element name="revision" type="revisionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="revisionType">
+        <xs:all>
+            <xs:element name="checkoutModificationNum" type="xs:string" />
+            <xs:element name="commitUuid" type="xs:string" minOccurs="0"/>
+            <xs:element name="modificationNum" type="xs:string" />
+            <xs:element name="respositoryId" type="xs:string" />
+        </xs:all>
+    </xs:complexType>
+
+
+</xs:schema>
